@@ -1,0 +1,10 @@
+{
+  "applications": {
+    "_default": {
+      "link": "desenrolaai"
+    },
+    "desenrolaai": {
+      "applicationId": "N1NHQ0pZoF6c9SW1rsb7R5fhhPv5lHYFV3PsuWUe"
+    }
+  }
+}

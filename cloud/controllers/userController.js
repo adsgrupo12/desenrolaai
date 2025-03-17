@@ -22,3 +22,29 @@ Parse.Cloud.define("sign-up", async (req) => {
         throw new Error("Erro ao cadastrar usuário: " + error.message);
     }
 });
+
+Parse.Cloud.define("get-logged-user", async (req) => {
+    if (!req.user) {
+        throw new Error("Usuário não autenticado.");
+    }
+
+    // Busca o usuário autenticado
+    const query = new Parse.Query(User);
+    query.equalTo("objectId", req.user.id);
+
+    const user = await query.first({ useMasterKey: true });
+
+    if (!user) {
+        throw new Error("Usuário não encontrado.");
+    }
+
+    return {
+        objectId: user.id,
+        username: user.get("username"),
+        fullName: user.get("fullName"),
+        email: user.get("email"),
+        isActive: user.get("isActive"),
+        createdAt: user.get("createdAt"),
+        updatedAt: user.get("updatedAt")
+    };
+}, { requireUser: true });

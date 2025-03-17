@@ -5,4 +5,17 @@ function isValidPhoneNumber(phoneNumber) {
     return /^(\d{10}|\d{11})$/.test(cleaned);
 }
 
-module.exports = { isValidPhoneNumber };
+function isValidAddress(params) {
+    const requiredFields = ["street", "number", "district", "city", "state", "postalCode", "country"]; // Corrigido para incluir os campos obrigatórios
+
+    for (const field of requiredFields) {
+        if (!params[field]) {
+            return `Campo obrigatório ausente: ${field}`;
+        }
+    }
+    
+    return null; // Retorna `null` se estiver tudo certo
+}
+
+// Exportando todas as funções corretamente
+module.exports = { isValidPhoneNumber, isValidAddress };

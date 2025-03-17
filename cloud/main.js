@@ -5,3 +5,5 @@ require("./controllers/sessionController");
 require("./controllers/addressController");
 require("./controllers/professionController");
 require("./controllers/categoryController");
+require("./controllers/commentController");
+require("./controllers/serviceListingController");

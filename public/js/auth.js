@@ -15,6 +15,12 @@ function redirecionarParaHome() {
 // Faz login usando endpoint do Back4App
 async function realizarLogin(email, password) {
     const alertMessage = document.getElementById("alertMessage");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+
 
     try {
         const response = await fetch('https://parseapi.back4app.com/functions/login', {

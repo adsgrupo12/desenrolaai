@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-white shadow-sm">
+        <div class="container d-flex align-items-center">
+            <a class="navbar-brand text-success" href="home.html">
+                <strong>✅ Desenrola Aí</strong>
+            </a>
+            <button id="logout-button" class="btn btn-danger">Sair</button>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2 class="text-center">Editar Perfil</h2>
+        <form id="profile-form">
+            <h4>Endereço</h4>
+            <input type="text" id="street" placeholder="Rua">
+            <input type="text" id="number" placeholder="Número">
+            <input type="text" id="complement" placeholder="Complemento">
+            <input type="text" id="district" placeholder="Bairro">
+            <input type="text" id="city" placeholder="Cidade">
+            <input type="text" id="state" placeholder="Estado">
+            <input type="text" id="postalCode" placeholder="CEP">
+            <input type="text" id="country" placeholder="País">
+            
+            <h4>Contato</h4>
+            <input type="text" id="phoneNumber" placeholder="Número de telefone">
+            
+            <h4>Profissão</h4>
+            <input type="text" id="profession" placeholder="Profissão">
+            
+            <button type="submit" class="btn btn-success mt-3">Salvar</button>
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $("#profile-form").submit(async function(event) {
+                event.preventDefault();
+                let userId = "xSxpDG6fY7"; // Pegue o ID real do usuário logado
+
+                // Criar Endereço
+                await fetch("https://parseapi.back4app.com/parse/functions/create-address", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Parse-Application-Id": "SEU_APP_ID",
+                        "X-Parse-REST-API-Key": "SUA_REST_KEY"
+                    },
+                    body: JSON.stringify({
+                        street: $("#street").val(),
+                        number: $("#number").val(),
+                        complement: $("#complement").val(),
+                        district: $("#district").val(),
+                        city: $("#city").val(),
+                        state: $("#state").val(),
+                        postalCode: $("#postalCode").val(),
+                        country: $("#country").val()
+                    })
+                });
+
+                // Criar Contato
+                await fetch("https://parseapi.back4app.com/parse/functions/create-contact", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Parse-Application-Id": "SEU_APP_ID",
+                        "X-Parse-REST-API-Key": "SUA_REST_KEY"
+                    },
+                    body: JSON.stringify({
+                        idUser: { _type: "Pointer", className: "_User", objectId: userId },
+                        phoneNumber: $("#phoneNumber").val()
+                    })
+                });
+
+                // Adicionar Profissão
+                await fetch("https://parseapi.back4app.com/parse/functions/add-profession", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Parse-Application-Id": "SEU_APP_ID",
+                        "X-Parse-REST-API-Key": "SUA_REST_KEY"
+                    },
+                    body: JSON.stringify({
+                        userId: userId,
+                        profession: $("#profession").val()
+                    })
+                });
+
+                alert("Perfil atualizado com sucesso!");
+                window.location.href = "home.html";
+            });
+        });
+    </script>
+</body>
+</html>

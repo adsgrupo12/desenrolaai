@@ -12,15 +12,8 @@ function redirecionarParaHome() {
     window.location.href = "home.html";
 }
 
-// Faz login usando endpoint do Back4App
 async function realizarLogin(email, password) {
     const alertMessage = document.getElementById("alertMessage");
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
-
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
-
 
     try {
         const response = await fetch('https://parseapi.back4app.com/functions/login', {
@@ -28,8 +21,7 @@ async function realizarLogin(email, password) {
             headers: {
                 "Content-Type": "application/json",
                 "X-Parse-Application-Id": "N1NHQ0pZoF6c9SW1rsb7R5fhhPv5lHYFV3PsuWUe",
-                "X-Parse-REST-API-Key": "AP4V9MLECbJZJcrBTPT9DXZ7be6OESA630S1f2Qr",
-                
+                "X-Parse-REST-API-Key": "AP4V9MLECbJZJcrBTPT9DXZ7be6OESA630S1f2Qr"
             },
             body: JSON.stringify({ email, password })
         });
@@ -38,14 +30,10 @@ async function realizarLogin(email, password) {
 
         if (response.ok && result.result?.sessionToken) {
             salvarSessao(result.result);
-
             alertMessage.className = "alert alert-success";
             alertMessage.innerText = "Login realizado com sucesso!";
             alertMessage.classList.remove("d-none");
-
-            setTimeout(() => {
-                redirecionarParaHome();
-            }, 2000);
+            setTimeout(() => redirecionarParaHome(), 2000);
         } else {
             throw new Error(result.error || "Erro ao fazer login. Verifique suas credenciais.");
         }
@@ -55,3 +43,4 @@ async function realizarLogin(email, password) {
         alertMessage.classList.remove("d-none");
     }
 }
+

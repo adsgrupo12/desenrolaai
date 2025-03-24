@@ -13,48 +13,43 @@ function redirecionarParaHome() {
 }
 
 async function realizarLogin(email, password) {
-    const alertMessage = document.getElementById("alert-message");
-
-    // Validação básica
+    const alertMessage = document.getElementById("alertMessage");
+  
     if (!email || !password) {
-        alertMessage.className = "alert alert-danger";
-        alertMessage.innerText = "Usuário e senha são obrigatórios.";
-        alertMessage.classList.remove("d-none");
-        return;
+      alertMessage.textContent = "Usuário e senha são obrigatórios.";
+      alertMessage.className = "alert alert-danger";
+      return;
     }
-
+  
     try {
-        const response = await fetch('https://parseapi.back4app.com/functions/login', {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-                "X-Parse-Application-Id": "N1NHQ0pZoF6c9SW1rsb7R5fhhPv5lHYFV3PsuWUe",
-                "X-Parse-REST-API-Key": "AP4V9MLECbJZJcrBTPT9DXZ7be6OESA630S1f2Qr"
-            },
-            body: JSON.stringify({ email, password })
-        });
-
-        const result = await response.json();
-
-        if (response.ok && result.result?.sessionToken) {
-            // Salva os dados da sessão
-            salvarSessao(result.result);
-
-            // Feedback de sucesso
-            alertMessage.className = "alert alert-success";
-            alertMessage.innerText = "Login realizado com sucesso!";
-            alertMessage.classList.remove("d-none");
-
-            // Redireciona
-            setTimeout(() => redirecionarParaHome(), 2000);
-        } else {
-            throw new Error(result.error || "Erro ao fazer login. Verifique suas credenciais.");
-        }
+      const response = await fetch("https://parseapi.back4app.com/functions/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Parse-Application-Id": "N1NHQ0pZoF6c9SW1rsb7R5fhhPv5lHYFV3PsuWUe",
+          "X-Parse-REST-API-Key": "AP4v9MLECbJZJcrBTPt9DK27be6OESA630Sf1F2Qr",
+        },
+        body: JSON.stringify({
+          username: email, // <- aqui é o segredo
+          password: password,
+        }),
+      });
+  
+      const result = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(result.error || "Erro ao fazer login.");
+      }
+  
+      // Salvar sessão
+      localStorage.setItem("sessionToken", result.result.sessionToken);
+      localStorage.setItem("userId", result.result.objectId);
+      localStorage.setItem("fullName", result.result.fullName);
+  
+      window.location.href = "home.html";
     } catch (error) {
-        alertMessage.className = "alert alert-danger";
-        alertMessage.innerText = error.message;
-        alertMessage.classList.remove("d-none");
+      alertMessage.textContent = error.message;
+      alertMessage.className = "alert alert-danger";
     }
-}
-
-
+  }
+  

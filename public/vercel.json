@@ -1,0 +1,10 @@
+{
+    "redirects": [
+      {
+        "source": "/",
+        "destination": "/frontend/signup.html",
+        "permanent": true
+      }
+    ]
+  }
+  

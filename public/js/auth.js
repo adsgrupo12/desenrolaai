@@ -13,7 +13,15 @@ function redirecionarParaHome() {
 }
 
 async function realizarLogin(email, password) {
-    const alertMessage = document.getElementById("alertMessage");
+    const alertMessage = document.getElementById("alert-message");
+
+    // Validação básica
+    if (!email || !password) {
+        alertMessage.className = "alert alert-danger";
+        alertMessage.innerText = "Usuário e senha são obrigatórios.";
+        alertMessage.classList.remove("d-none");
+        return;
+    }
 
     try {
         const response = await fetch('https://parseapi.back4app.com/functions/login', {
@@ -29,10 +37,15 @@ async function realizarLogin(email, password) {
         const result = await response.json();
 
         if (response.ok && result.result?.sessionToken) {
+            // Salva os dados da sessão
             salvarSessao(result.result);
+
+            // Feedback de sucesso
             alertMessage.className = "alert alert-success";
             alertMessage.innerText = "Login realizado com sucesso!";
             alertMessage.classList.remove("d-none");
+
+            // Redireciona
             setTimeout(() => redirecionarParaHome(), 2000);
         } else {
             throw new Error(result.error || "Erro ao fazer login. Verifique suas credenciais.");
@@ -43,4 +56,5 @@ async function realizarLogin(email, password) {
         alertMessage.classList.remove("d-none");
     }
 }
+
 

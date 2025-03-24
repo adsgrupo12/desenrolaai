@@ -2,7 +2,7 @@
     "redirects": [
       {
         "source": "/",
-        "destination": "/frontend/signup.html",
+        "destination": "signup.html",
         "permanent": true
       }
     ]

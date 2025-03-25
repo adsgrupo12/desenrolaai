@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 card.className = "col-md-3 mb-4";
                 card.innerHTML = `
                     <div class="card shadow-sm">
-                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="${category.name}">
+                        <img src="${category.photoUrl || 'https://via.placeholder.com/150'}" class="card-img-top" alt="${category.name}">
                         <div class="card-body">
                             <h5 class="card-title">${category.name}</h5>
                             <p class="card-text">${category.description}</p>

@@ -82,7 +82,8 @@ Parse.Cloud.define("get-categories", async (req) => {
         objectId: category.id,
         name: category.get("name"),
         description: category.get("description"),
-        subcategories: category.get("subcategories") || []
+        subcategories: category.get("subcategories") || [],
+        photoUrl: category.get("photo_category")?.url() || null
     }));
 
     return { categories: formattedCategories };

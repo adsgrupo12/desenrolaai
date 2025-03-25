@@ -13,7 +13,7 @@ function redirecionarParaHome() {
 }
 
 async function realizarLogin(email, password) {
-    const alertMessage = document.getElementById("alertMessage");
+    const alertMessage = document.getElementById("alert-message");
   
     if (!email || !password) {
       alertMessage.textContent = "Usuário e senha são obrigatórios.";
@@ -26,8 +26,8 @@ async function realizarLogin(email, password) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-Parse-Application-Id": "N1NHQ0pZoF6c9SW1rsb7R5fhhPv5lHYFV3PsuWUe",
-          "X-Parse-REST-API-Key": "AP4v9MLECbJZJcrBTPt9DK27be6OESA630Sf1F2Qr",
+           "X-Parse-Application-Id": "N1NHQ0pZoF6c9SW1rsb7R5fhhPv5lHYFV3PsuWUe",
+           "X-Parse-REST-API-Key": "AP4V9MLECbJZJcrBTPT9DXZ7be6OESA630S1f2Qr"
         },
         body: JSON.stringify({
           username: email, // <- aqui é o segredo

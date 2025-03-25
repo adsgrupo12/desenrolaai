@@ -1,59 +1,73 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const deleteAccountButton = document.getElementById("delete-account");
-
+  
     if (deleteAccountButton) {
-        deleteAccountButton.addEventListener("click", function(event) {
-            event.preventDefault(); // Evita navegação acidental
-
-            // Exibe um alerta personalizado com SweetAlert2
-            Swal.fire({
-                title: "Tem certeza?",
-                text: "Esta ação é irreversível! Sua conta será excluída permanentemente.",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#d33", // Vermelho para o botão de confirmação
-                cancelButtonColor: "#6c757d", // Cinza para o botão de cancelar
-                confirmButtonText: "Sim, excluir!",
-                cancelButtonText: "Cancelar"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Simulação da requisição para o backend
-                    fetch("https://seuservidor.com/api/delete-account", {
-                        method: "DELETE",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": "Bearer SEU_TOKEN_AQUI"
-                        }
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error("Erro ao excluir a conta.");
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        Swal.fire({
-                            title: "Conta excluída!",
-                            text: "Sua conta foi excluída com sucesso.",
-                            icon: "success",
-                            confirmButtonColor: "#198754", // Verde para sucesso
-                            confirmButtonText: "OK"
-                        }).then(() => {
-                            window.location.href = "/"; // Redireciona para a página inicial
-                        });
-                    })
-                    .catch(error => {
-                        Swal.fire({
-                            title: "Erro!",
-                            text: "Não foi possível excluir a conta. Tente novamente.",
-                            icon: "error",
-                            confirmButtonColor: "#d33",
-                            confirmButtonText: "OK"
-                        });
-                        console.error("Erro:", error);
-                    });
-                }
-            });
+      deleteAccountButton.addEventListener("click", function (event) {
+        event.preventDefault();
+  
+        Swal.fire({
+          title: "Tem certeza?",
+          text: "Esta ação é irreversível! Sua conta será excluída permanentemente.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#6c757d",
+          confirmButtonText: "Sim, excluir!",
+          cancelButtonText: "Cancelar"
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            const sessionToken = localStorage.getItem("sessionToken");
+  
+            if (!sessionToken) {
+              Swal.fire("Erro", "Usuário não está autenticado.", "error");
+              return;
+            }
+  
+            try {
+              // Primeiro, pega os dados do usuário logado
+              const userResponse = await fetch("https://parseapi.back4app.com/parse/users/me", {
+                method: "GET",
+                headers: {
+                  "X-Parse-Application-Id": "N1NHQ0pZoF6c9SW1rsb7R5fhhPv5lHYFV3PsuWUe",
+                  "X-Parse-REST-API-Key": "AP4V9MLECbJZJcrBTPT9DXZ7be6OESA630S1f2Qr",
+                  "X-Parse-Session-Token": sessionToken,
+                },
+              });
+  
+              const userData = await userResponse.json();
+  
+              if (!userData.objectId) throw new Error("Usuário não encontrado.");
+  
+              // Agora envia para a função delete-user
+              const deleteResponse = await fetch("https://parseapi.back4app.com/parse/functions/delete-user", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-Parse-Application-Id": "N1NHQ0pZoF6c9SW1rsb7R5fhhPv5lHYFV3PsuWUe",
+                  "X-Parse-REST-API-Key": "AP4V9MLECbJZJcrBTPT9DXZ7be6OESA630S1f2Qr",
+                  "X-Parse-Session-Token": sessionToken
+                },
+                body: JSON.stringify({ userId: userData.objectId })
+              });
+  
+              const result = await deleteResponse.json();
+  
+              if (!deleteResponse.ok) {
+                throw new Error(result.error || "Erro ao excluir a conta.");
+              }
+  
+              Swal.fire("Conta excluída!", "Sua conta foi removida com sucesso.", "success").then(() => {
+                localStorage.clear();
+                window.location.href = "login.html";
+              });
+  
+            } catch (error) {
+              console.error("Erro:", error);
+              Swal.fire("Erro!", error.message, "error");
+            }
+          }
         });
+      });
     }
-});
+  });
+  

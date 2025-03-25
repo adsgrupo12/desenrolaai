@@ -48,3 +48,28 @@ Parse.Cloud.define("get-logged-user", async (req) => {
         updatedAt: user.get("updatedAt")
     };
 }, { requireUser: true });
+
+Parse.Cloud.define("delete-user", async (req) => {
+    const { userId } = req.params;
+    const sessionToken = req.headers["x-parse-session-token"];
+  
+    if (!userId || !sessionToken) {
+      throw new Error("userId e sessionToken são obrigatórios.");
+    }
+  
+    try {
+      const userQuery = new Parse.Query(Parse.User);
+      const user = await userQuery.get(userId, { sessionToken });
+  
+      await user.destroy({ sessionToken });
+  
+      return {
+        status: "success",
+        message: "Usuário excluído com sucesso.",
+        userId: userId,
+      };
+    } catch (error) {
+      throw new Error(`Erro ao excluir usuário: ${error.message}`);
+    }
+  });
+  
